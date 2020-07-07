@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    项目构建笔记
+    <div>准备工作</div>
+    <section>
+        <!-- 1.建立文件夹 model 数据库模板 public 静态资源 route 路由 views 模板配置 -->
+        <!-- 2.使用npm init -y生成package文件 -->
+        <!-- 3.使用npm install下载所需第三方包 -->
+        <!-- 4.创建网站服务器 -->
+        <!-- 5.构建模块化路由 -->
+        <!-- 6.构建模板界面 -->
+        <!-- 7.开放模板界面  express.static() -->
+        <!-- 8.使用模板引擎 -->
+        <!-- 9.处理外链资源路径问题   相对路径需要改变为绝对路径 -->
+    </section>
+    <div>抽取公共部分</div>
+    <section>
+        <!-- 1.抽取用户界面的头部和侧边栏   创建common文件夹 -->
+        <!-- 2.创建用户列表路由 -->
+        <!-- 3.替换用户界面的抽取公共部分  {{include "路径"}} -->
+        <!-- 4.创建layout.art HTML骨架 并留下坑 {{block "坑名"}} {{/block}}-->
+        <!-- 5.替换HTML骨架部分   {{extend  "路径"}} -->
+        <!-- 6.填坑  {{block "坑名"}} {{/block}} -->
+    </section>
+    <div>实现登入功能</div>
+    <section>
+        <!-- 1.创建JS文件 连接数据库-->
+        <!-- 2.创建JS文件 制作数据库规则 -->
+        <!-- 3.创建用户集合，初始化用户 -->
+        <!-- 4.为登入表单项设置请求地址、请求方式以及表单项name属性 -->
+        <!-- 5.创建获取用户登入输入内容的模板  在public下JS目录创建公共js文件 -->
+        <!-- 6.当用于点击登入按钮的时候对框内数据进行判断 -->
+        <!-- 7.有一项不满足拦截登入请求，并响应提示框-->
+        <!-- 8.对提交的post参数进行处理 引入body-parser模块 -->
+        <!-- 9.利用use中间件拦截  使用bodyparser.urlencoded({ extended: false }) -->
+        <!-- 10.在路由中对象解构 req.body 判断post参数 -->
+        <!-- 11.建立错误界面模板 并让post路由呈递 -->
+        <!-- 12.设定3秒后跳回登入界面 -->
+        <!-- 13.导入用户集合构造函数 require()-->
+        <!-- 14.查询用户集合findOne({email:email}) 将函数变为异步函数 -->
+        <!-- 15.将用户输入结果与查询到的结果比对-->
+        <!-- 16.登入后一直建立客户端于服务器端的联系  借用cookie session -->
+        <!-- 17.将用户名存储在session里面 -->
+        <!-- 18.将用户信息存储在req.app.locals下面 req.app.locals.userInfo = user; -->
+        <!-- 19.重定向 res.redirect(“路径”)  在头部模板更改用户名-->
+        <!-- 20.在app.js中引入express-session  
+            设定app.use(session({ secret: "secret key", saveUninitialized: false })) -->
+        <!-- 21.设置登入cookie失效时间 cookie:{maxAge:24*60*60*1000} -->
+    </section>
+    <div>密码加密</div>
+    <section>
+        <!-- 1.哈希加密 bcrypt   生成随机字符串 bcrypt.genSalt(10) -->
+        <!-- 安装python 安装npm install -g node-gyp  安装 npm install --global --production windows-build-tools -->
+        <!-- 安装 npm install bcrypt -->
+        <!-- 2.将数据库密码加密 
+            const salt = await bcrypt.genSalt(10);
+            对密码进行加密  参数1：加密明文 参数2：随机字符串
+            const result = await bcrypt.hash("123456", salt)
+        -->
+        <!-- 3.将用户输入的密码加密  与数据库加密密码比对
+            const re = await bcrypt.compare(password, user.password)
+        -->
+    </section>
+    <div>登入拦截</div>
+    <section>
+        <!-- 1.当用户访问直接访问/admin/user时 我们要对请求进行拦截-->
+        <!-- 2.使用app.use中间件进行url和是否有session用户名的判断 -->
+        <!-- 3.符合则放行next() 不符合则重定向到登入界面res.redirect("/admin/login"); -->
+        <!-- 4.抽取登入拦截函数在middleware文件夹内的loginGuard.js文件，通过exports方式开放 -->
+        <!-- 5.app.js文件中引入该文件 -->
+    </section>
+    <div>用户退出</div>
+    <section>
+        <!-- 1.找到用户退出按钮，设定退出请求路由 -->
+        <!-- 2.在admin.get()中删除session  cookie 重定向页面到登入界面 
+        req.session.destroy(function() {
+        res.clearCookie("connect.sid");
+        res.redirect("/admin/login")
+    });
+    -->
+    </section>
+    <div>新增用户</div>
+    <section>
+        <!-- 1.为用户列表页面新增用户按钮添加链接 -->
+        <!-- 2.创建用户编辑页面路由 -->
+        <!-- 3.修改用户编辑提交路径和方法 -->
+        <!-- 4.给每一个属性加上name值、value值 -->
+        <!-- 5.创建接受提交表单post请求的路由，在外部书写函数并引入 -->
+        <!-- 6.在外部函数中处理req.body 使用joi进行验证-->
+        <!-- 7.引入joi 创建schema验证规则 使用await Joi.validate(req.body, schema); -->
+        <!-- 8.验证不通过使用catch将页面重定向并传输错误信息 -->
+        <!-- 9.在验证js文件中解构错误信息  const { message } = req.query-->
+        <!-- 10.在模板页错误信息处替换为解构的错误信息 -->
+        <!-- 11.验证通过 根据邮箱地址查询用户是否存在 如果存在重定向回编辑界面并返回错误信息-->
+        <!-- 12.如果是新用户 对密码加密 替换post请求参数获得的密码 跳转至用户列表页面 -->
+        <!-- 13.在数据库中添加新用户 -->
+    </section>
+    <div>用户列表搭建</div>
+    <section>
+        <!-- 1.找到userPage.js文件 使用对象解构引入用户集合 -->
+        <!-- 2.查询所有的用户集合，赋值于一个变量 -->
+        <!-- 3.渲染界面，在第二个参数传入用户集合变量 -->
+        <!-- 4.来到user.art界面，使用循环{{each users}} -->
+        <!-- 5.更换表格内的数据为{{$value.name。。。。}} -->
+    </section>
+    <div>用户列表数据分页</div>
+    <section>
+        <!-- 1.建立userPage.js文件，导入用户集合 -->
+        <!-- 2.建立导出函数（异步函数），在导出函数中书写分页代码 -->
+        <!-- 3.接受客户端传递的当前页参数  let page = req.query.page || 1 -->
+        <!-- 4.设定最大单页显示数据数 pagesize-->
+        <!-- 5.查询用户集合中的数据 const count = await User.countDocuments({});-->
+        <!-- 6.向上取整最大页数 Math.ceil() -->
+        <!-- 7.设定页码对应数据条数开始位置 -->
+        <!-- 8.查询用户信息 限制查询页面  跳过一部分数据 let users = await User.find({}).limit(pagesize).skip(start)-->
+        <!-- 9.渲染界面，在第二个参数中传递上述变量 -->
+        <!-- 10.来到user.art模板，建立页码循环 -->
+        <!-- 11.给上一页和下一页添加page地址 -->
+        <!-- 12.设定上一页和下一页的显示状态 style="display:<%=(page-1)<1?"none":"inline"%>" -->
+        <!-- 13.给上一页添加page-1  给下一页添加page-0+1(隐式转换) -->
+    </section>
+    <div>修改用户</div>
+    <section>
+        <!-- 1.为用户编辑js文件导入用户集合 -->
+        <!-- 2.建立导出函数（异步函数），在导出函数中书写分页代码 -->
+        <!-- 3.给编辑按钮添加链接 附带id值 -->
+        <!-- 4.判断req中是否有id这个属性，有判断为编辑用户请求 -->
+        <!-- 5.查询当前id对应用户 let user = await User.findOne({ _id: id }) -->
+        <!-- 6.渲染页面，并在第二个参数中传递代填变量 -->
+        <!-- 7.来到用户编辑.art页面 给每一个表单项添加6步骤中传入的属性值 value="{{user && user.username}}"-->
+        <!-- 8.更改修改用户、添加用户时的按钮文字 -->
+        <!-- 9.给用户修改添加提交链接 -->
+        <!-- 10.给用户添加添加提交链接 -->
+        <!-- 11.来到模板页面，判断按钮状态，为表单提交链接绑定变量 action="{{link}}"-->
+        <!-- 12.<h4 style="display:{{button=="修改"?"block":"none"}}">{{@user && user._id}}</h4> -->
+        <!-- 13.引入用户集合与加密第三方包，准备对用户输入的密码进行比对 -->
+        <!-- 14.获得该修改用户的id值，密码值 并用获得的id值查询用户对应信息-->
+        <!-- 15.比对密码 如果比对成功则更新用户数据 await User.updateOne 并重定向页面到用户列表界面-->
+        <!-- 16.比对失败 则传递错误信息、跳转界面和id值 使用next(JSON.stringify(obj))给错误处理中间件 -->
+        <!-- 17.声明一个空数组 -->
+        <!-- 18.使用for(  in  ) 进行循环并拼接字符串 此时我们要排除next中间件对象中的path -->
+        <!-- 19.把next中间件对象中的所有属性名和属性值添加到空数组中 -->
+        <!-- 20.将?message后的信息更改为变量形式 -->
+    </section>
+    <div>删除用户</div>
+    <section>
+        <!-- 1.为删除用户按钮添加class名 附上id值 并用Jquery获取 -->
+        <!-- 2.为弹出页添加隐式表单，并附上id值 -->
+        <!-- 3.书写action选项，以及方法get -->
+        <!-- 4.点击按钮提交到响应路由，新建一个路由以处理删除请求 -->
+        <!-- 5.获取用户集合  对象结构 -->
+        <!-- 6.获取id值 使用await User.findOneAndDelete({ _id: id })删除用户-->
+        <!-- 7.页面重定向至用户列表页面 -->
+    </section>
+    <div>文章页面切换特效</div>
+    <section>
+        <!-- 1.给文章页面加上req.app.locals.currentLink = "article"; -->
+        <!-- 2.给用户页面加上req.app.locals.currentLink ="user" -->
+        <!-- 3.在侧边模板页面中更改href属性 -->
+        <!-- 4.在侧边模板页面中更改a 的class类名 此时要使用三元表达式判断 -->
+    </section>
+    <div>文章内容添加</div>
+    <section>
+        <!-- 1.来到article的模板页面，给发布新文章添加一个跳转链接 -->
+        <!-- 2.来到article-edit模板页面，给每一个表单项增加name属性 -->
+        <!-- 3.新建文章编辑路由js文件，并在路由文件中引用 -->
+        <!-- 4.创建文章集合规则，并实例化 共享导出-->
+        <!-- 5.为article-edit模板form表单提交添加地址、方法、进制解析enctype="multipart/form-data" -->
+        <!-- 6.新建文章添加路由js文件，并在路由文件中引用 -->
+        <!-- 7.在文章添加路由中引入formidable -->
+        <!-- 8.创建导出函数  在函数内 创建表单解析对象 const obj = new formidable.IncomingForm();-->
+        <!-- 9.创建文件上传文件夹 并把上传的文件存放于新建文件夹  
+            obj.uploadDir = path.join(__dirname, "../", "../", "public", "uploads"); -->
+        <!-- 10.创建表单对象parse  对页面进行渲染 -->
+        <!-- 11.导入文章集合规则，通过对象解构出来 -->
+        <!-- 12.根据集合，将parse变成异步函数  在数据库中创建文章 -->
+        <!-- 13.来到article.js配置文件  查询所有数据库中的文章 -->
+        <!-- 14.查询完毕后 使用populate("author")将作者字段对应的所有信息查询出来 -->
+        <!-- 因为之前创建文章规则集合的时候 与作者进行了关联 
+            type: mongoose.Schema.Types.ObjectId, ref: "User",-->
+        <!-- 15.来到文章列表模板界面 进行模板循环 使用$value.XXX形式填补 -->
+        <!-- 16.对文章作者进行单独填写  $value.author.username -->
+        <!-- 17.对发布时间进行配置  使用dateFormat第三方包 -->
+        <!-- 18.在主文件app.js引用template 并使用template.default.import.dateFormat=dateFormat共享-->
+        <!-- 19.对日期进行处理  dateFormat($value.publishDate,"yyyy-mm-dd") -->
+        <!-- 20.渲染信息文章列表界面 -->
+    </section>
+    <div>文章封面预览功能</div>
+    <section>
+        <!-- 1.需要使用FileReader 给文件添加区域加上id便于获取-->
+        <!-- 2.获取文件添加区域id  -->
+        <!-- 3.给文件封面预览区添加id  并获取 -->
+        <!-- 4.当文件添加区域变动时，使用FileReader var reader=new FileReader(); -->
+        <!-- 5.获取到添加文件的路径值 reader.readAsDataURL(this.files[0]); -->
+        <!-- 6.当file加载完毕后，把预览区的外部链接赋值为添加文件的路径 -->
+    </section>
+    <div>文章列表数据分页</div>
+    <section>
+        <!-- 1.使用mongoose-sex-page 引入并下载-->
+        <!-- 2.获取当前页码  const page = req.query.page; -->
+        <!-- 3.链式调用调整文章列表页面的显示效果   let articles = await pagination(Article).find()
+            .page(page).size(4).display(3).populate("author").exec(); -->
+        <!-- 4.给上一页和下一页添加page地址 -->
+        <!-- 5.设定上一页和下一页的显示状态 style="display:<%=(page-1)<1?"none":"inline"%>" -->
+        <!-- 6.给上一页添加page-1  给下一页添加page-0+1(隐式转换) -->
+    </section>
+    <div>超级管理员账号</div>
+    <section>
+        <!-- 1.使用管理员身份运行命令行工具 mongo 连接数据库-->
+        <!-- 2.使用show dbs显示数据库 -->
+        <!-- 3.使用use admin切换到admin数据库 -->
+        <!-- 4.创建admin账号  db.createUser({user:"root",pwd:"root",roles:["root"]}) -->
+        <!-- 5.使用use blog切换到blog数据库 -->
+        <!-- 6.创建blog账号  db.createUser({user:"itcast",pwd:"itcast",roles:["readWrite"]}) -->
+        <!-- 7.退出  exit -->
+        <!-- 8.停止服务  net stop  mongodb -->
+        <!-- 9.卸载服务  mongod --remove -->
+        <!-- 10.mongod --logpath="C:\Program Files\MongoDB\Server\4.1\log\mongod.log" 
+            --dbpath="C:\Program Files\MongoDB\Server\4.1\data" --install --auth -->
+        <!-- 11.重新启动net start mongoDB  并改造连接数据库代码 -->
+    </section>
+    <div>简化代码</div>
+    <section>
+        <!-- 1.抽取路由中原有的功能到一个文件夹中，并开放 -->
+        <!-- 2.在路由中导入开放文件 -->
+        <!-- 3.抽取用户验证模块到user.js中，并开放 -->
+        <!-- 4.在user-edit-fn.js中用对象解构拿到用户验证函数 调用 -->
+        <!-- 5.在app.js中建立错误信息处理中间件 -->
+        <!-- 6.在验证js文件中返回next() -->
+        <!-- 7.在中间件中拿到next()里的信息，使用字符串拼接动态生成错误信息并重定向 -->
+    </section>
+    <div>生产环境与开发环境</div>
+    <section>
+        <!-- 1.引入morgan 判断系统环境变量中的NODE_ENV类型 -->
+        <!-- 2.如果是开发环境  则使用app.use(morgan("dev")) -->
+        <!-- 3.如果是生产环境则不添加 -->
+        <!-- 4.引入config 并在文件根目录下建立config文件夹 -->
+        <!-- 5.在config文件夹下建立三个json文件 -->
+        <!-- 6.敏感信息存储  建立custom-environment-variables.json -->
+        <!-- 7.将密码文件存储在json内  设置环境变量名字   删除development.json中的密码选项 -->
+    </section>
+    <div>博客展示页面</div>
+    <section>
+        <!-- 1.建立路由文件，建立相关JS文件  并且在路由文件引入 -->
+        <!-- 2.抽取模板  建立common文件夹  建立layout.art 挖坑 -->
+        <!-- 3.在界面模板继承layout.art 填坑-->
+        <!-- 4.抽取头部  建立header.art -->
+        <!-- 5.在界面模板中包含header.art  include -->
+        <!-- 6.分页  引入分页模块、文章集合模块  对数据进行查询 并渲染模板传递查询参数-->
+        <!-- 7.处理格式  首先用dateFormat对时间进行处理 -->
+        <!-- 8.去除HTML标签  原文输出  并且截取前150个字符串
+            {{@$value.content.replace(/<[^>]{1,}>/g,"").substr(0,150) + "..."}} -->
+        <!-- 9.给每个文章链接添加href并带上服务器传过来的id -->
+    </section>
+    <div>单文章展示界面</div>
+    <section>
+        <!-- 1.接受文章链接传过来的id  const id=req.query.id -->
+        <!-- 2.对id进行查询，并查询二级分类username，使用变量接收查询值  使用populate -->
+        <!-- 3.渲染模板，并传递变量值res.render("home/article", {article: article}) -->
+        <!-- 4.来到article.art模板界面 将传递的值对应替换模板内容 并处理 -->
+    </section>
+    <div>角色拦截</div>
+    <section>
+        <!-- 1.在登入js文件中，判断登入的角色 并使用session存储用户角色-->
+        <!-- 2.如果是超级管理员  则跳转到管理页面  如果是普通用户  则跳转到博客首页 -->
+        <!-- 3.修改登入保护代码  在登入后访问时对用户角色进行判断 -->
+        <!-- 4.如果用户是普通用户则一旦访问后台管理界面就跳转到博客首页 -->
+    </section>
+    <div>评论功能</div>
+    <section>
+        <!-- 1.新建评论集合规则 实例化并导出-->
+        <!-- 2.在模板界面找到评论  对用户的登入信息进行判断  如果登入显示评论 -->
+        <!-- 3.解决BUG  用户在退出登入时  评论仍然显示  是因为我们根据的是存储在locals.userInfo进行判断 -->
+        <!-- 4.我们在退出登录操作后，需要添加req.app.locals.userInfo = null  -->
+        <!-- 5.在article.art模板中  为提交按钮设定提交路径 以及POST方法 -->
+        <!-- 6.创建隐藏域  并添加name属性 -->
+        <!-- 7.在home.js中添加评论路由 -->
+        <!-- 8.创建对应js文件  对象解构方式获得评论集合规则 -->
+        <!-- 9.从req.body中对象解构获得content uid aid -->
+        <!-- 10.await Comment.create({})新建评论  并重定向到文章界面要附带id值 -->
+        <!-- 11.来到评论渲染模板article.art 使用{{each}}循环 -->
+        <!-- 12.为每一个要循环的地方添加属性值 -->
+    </section>
+</body>
+
+</html>
